@@ -122,15 +122,6 @@ class Flow(object):
                 return False
         return True
 
-    def generate_run_sequence(self):
-        # this is the meat of the operation
-        # generates a linear task sequence
-        # based on routes, branches and route roots
-        task_set = [
-            [k, v] for (k, v) in sorted(self.routes.items(), reverse=True)
-        ]
-        return task_set
-
     def launch_and_join_workers(self):
         workers = []
         workers_done = set()
@@ -169,6 +160,7 @@ class RouteWorker(threading.Thread):
                     self.flow.seen_tests.add(task)
                     print('\t\t\033[92m %s passed' % task)
                 self.flow.passed_tests.add(task)
+
             except BaseException as e:
                 if task not in self.flow.seen_tests:
                     self.flow.seen_tests.add(task)
