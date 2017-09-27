@@ -71,14 +71,7 @@ class FlowRoute(object):
 
 
 class Flow(object):
-    root_url = ''
-
     def __init__(self):
-        if not self.root_url:
-            raise FlowException(
-                'no root_url set on %s' % type(self).__name__
-            )
-
         self.routes = self.build_routes()
         self.ensure_route_tree()
         self.passed_tests = set()
