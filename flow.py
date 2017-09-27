@@ -7,10 +7,29 @@ class FlowException(Exception):
 
 
 def flow(route, ordinal, root_task=()):
-    # root task may be another pair of [route, ordinal]
-    # that signifies a point at which to branch into
-    # a new route - this should only be used at the
-    # first step of a new route
+    """
+    Decorator enabling the configuration of flow routes.
+    A 'flowroute' is a path through a particular 'flow'.
+    For example, a path through the 'welcome flow' might
+    include the routes 'email signin' and 'social signin'.
+
+    Use:
+        flag a test function in a flow class with this
+        decorator, signifying route (string) name,
+        ordinal (where in the route sequence it should
+        be), and optionally a root_task.
+
+    Root_task:
+        root_task is used on PRIMARY ORDINAL route tasks
+        only - it establishes a 'branching' route that
+        depends on some (or all) of another route's final
+        state. Use this to capture general first-steps in
+        a flow, like signing in.
+    :param route:
+    :param ordinal:
+    :param root_task:
+    :return:
+    """
     def inner(fn):
         package = {
             'route': route,
@@ -28,6 +47,15 @@ def flow(route, ordinal, root_task=()):
 
 
 class FlowRoute(object):
+    """
+    A potentially branching route through a flow.
+    For example:
+        The 'welcome' flow might have the routes
+        'email signin' and 'social signin'.
+
+    The internals of this shouldn't be of any interest
+    to clients of the framework.
+    """
     def __init__(self, name, root_ordinal=None, root_route=None):
         self.name = name
         self.sequence = []
@@ -71,6 +99,25 @@ class FlowRoute(object):
 
 
 class Flow(object):
+    """
+    A flow defines an overarching user experience on
+    a website. For example, a flow might be the
+    'welcome flow', or a users experience on the welcome
+    landing pages. There may be a number of branching
+    routes through that flow - for instance, social
+    signin vs. email signin in the welcome flow.
+
+    Use:
+        Subclass Flow to create a new flow. Define step
+        functions in your flow that are the discreet
+        events of that user experience. See the @flow
+        decorator for more insight into how to annotate
+        these task functions.
+
+        Make sure to put _eggtest somewhere in your task
+        functions. The class itself is parsed and processed
+        to get ready for running.
+    """
     def __init__(self):
         self.routes = self.build_routes()
         self.ensure_route_tree()
@@ -101,7 +148,7 @@ class Flow(object):
         Ensures that route roots are properly applied across
         all routes (basically this builds our route tree, as
         the first pass building the routes may not have had
-        all available connections built
+        all available connections built.
         :return:
         """
         for _, route in self.routes.items():
@@ -143,6 +190,12 @@ class Flow(object):
 
 
 class RouteWorker(threading.Thread):
+    """
+    Basic paralellization of flow routes. Since
+    dependencies are baked in to each individual
+    route worker, we can do this safely as each
+    has its own browser state.
+    """
     def __init__(self, flow, route):
         threading.Thread.__init__(self)
         self.flow = flow
