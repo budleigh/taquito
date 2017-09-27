@@ -1,4 +1,4 @@
-from flows.flow import Flow, flow
+from flow import Flow, flow
 
 
 class WelcomeFlow(Flow):
@@ -10,8 +10,8 @@ class WelcomeFlow(Flow):
 
     @flow('main', 2)
     def continue_with_email_eggtest(self, driver):
-        raise Exception('hello sir')
+        raise Exception('hello')
 
     @flow('social', 1, root_task=('main', 1))
-    def continue_with_facebook(self, driver):
+    def continue_with_facebook_eggtest(self, driver):
         pass
