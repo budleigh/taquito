@@ -1,9 +1,10 @@
 import os
 from flows.welcome import WelcomeFlow
+from flows.browse import BrowseFlow
 
 
 def build_flow_set():
-    return [WelcomeFlow]
+    return [WelcomeFlow, BrowseFlow]
 
 
 if __name__ == '__main__':

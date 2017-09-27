@@ -195,6 +195,8 @@ class RouteWorker(threading.Thread):
     dependencies are baked in to each individual
     route worker, we can do this safely as each
     has its own browser state.
+
+    NOTE: this seems to not actually work right now.
     """
     def __init__(self, flow, route):
         threading.Thread.__init__(self)
