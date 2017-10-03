@@ -2,8 +2,6 @@ from flow import Flow, flow
 
 
 class WelcomeFlow(Flow):
-    root_url = 'http://www.goodeggs.dev:3000'
-
     @flow('main', 1)
     def enter_zip_eggtest(self, driver):
         pass

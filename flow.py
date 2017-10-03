@@ -131,12 +131,7 @@ class Flow(object):
             if '_eggtest' in member:
                 package = getattr(self, member)
                 if self.validate_package(package):
-                    route, fn, ord = (
-                        package['route'],
-                        package['fn'],
-                        package['ordinal'],
-                    )
-
+                    route = package['route']
                     if route not in routes:
                         routes[route] = FlowRoute(route)
                     routes[route].add_route_package(package)
