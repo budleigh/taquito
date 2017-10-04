@@ -6,7 +6,7 @@ class FlowException(Exception):
     pass
 
 
-def flow(route, ordinal, root_task=()):
+def flow(route='', step=0, root=()):
     """
     Decorator enabling the configuration of flow routes.
     A 'flowroute' is a path through a particular 'flow'.
@@ -26,22 +26,27 @@ def flow(route, ordinal, root_task=()):
         state. Use this to capture general first-steps in
         a flow, like signing in.
     :param route:
-    :param ordinal:
+    :param step:
     :param root_task:
     :return:
     """
     def inner(fn):
+        if not step or not route:
+            raise FlowException(
+                'step and route are non-optional'
+            )
+
         package = {
             'route': route,
-            'ordinal': ordinal,
+            'ordinal': step,
             'fn': fn,
         }
-        if root_task:
-            if ordinal != 1:
+        if root:
+            if step != 1:
                 raise FlowException(
                     'cannot root on a non-1 flow task'
                 )
-            package['root'] = root_task
+            package['root'] = root
         return package
     return inner
 
