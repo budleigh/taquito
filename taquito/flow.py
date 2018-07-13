@@ -1,4 +1,6 @@
 import threading
+from typing import Tuple
+
 from selenium import webdriver
 
 
@@ -6,7 +8,7 @@ class FlowException(Exception):
     pass
 
 
-def flow(route='', step=0, root=()):
+def flow(route: str='', step: int=0, root: Tuple[str, int]=()):
     """
     Decorator enabling the configuration of flow routes.
     A 'flowroute' is a path through a particular 'flow'.
@@ -27,7 +29,7 @@ def flow(route='', step=0, root=()):
         a flow, like signing in.
     :param route:
     :param step:
-    :param root_task:
+    :param root:
     :return:
     """
     def inner(fn):
